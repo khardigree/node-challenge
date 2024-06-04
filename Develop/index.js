@@ -1,6 +1,7 @@
 // TODO: Include packages needed for this application
 const inquirer = require('inquirer');
 const fs = require('fs');
+const { renderLicenseBadge, renderLicenseLink, renderLicenseSection } = require('./utils/generateMarkdown');
 
 // TODO: Create an array of questions for user input
 const questions = [
@@ -38,7 +39,7 @@ const questions = [
         type: 'list',
         message: 'What license would you like to use?',
         name: 'license',
-        choices: ['MIT', 'Apache', 'GPL'],
+        choices: ['MIT', 'Apache 2.0', 'GPL 3.0'],
     },
     {
         type: 'input',
@@ -50,10 +51,10 @@ const questions = [
 // TODO: Create a function to write README file
 function writeToFile({title, description, installation, usage, contribution, test, license, email}) {
     return `# ${title}
-    
+
     ## Description
     ${description}
-    
+
     ## Table of Contents
 1. [Description](#description)
 2. [Installation](#installation)
@@ -62,26 +63,29 @@ function writeToFile({title, description, installation, usage, contribution, tes
 5. [Contributing](#contributing)
 6. [Tests](#tests)
 7. [Questions](#questions)
-    
 
-    ## Installation 
+
+    ## Installation
     ${installation}
-    
+
     ## Usage
     ${usage}
-    
+
     ## Contribution
     ${contribution}
-    
+
     ## Test
     ${test}
-    
+
     ## License
-    ${license}
-    
+    ${renderLicenseBadge(license)}
+    ${renderLicenseSection(license)}
+    ${renderLicenseLink(license)}
+
     ## Questions?
     ${email}`;
 }
+
 
 // TODO: Create a function to initialize app
 function init() {
