@@ -1,7 +1,8 @@
+const inquirer = require('inquirer'); // Package for user prompts
+const fs = require('fs'); // Package for file system operations
+const { renderLicenseBadge, renderLicenseLink, renderLicenseSection } = require('./utils/generateMarkdown'); // Importing functions from another file
+
 // TODO: Include packages needed for this application
-const inquirer = require('inquirer');
-const fs = require('fs');
-const { renderLicenseBadge, renderLicenseLink, renderLicenseSection } = require('./utils/generateMarkdown');
 
 // TODO: Create an array of questions for user input
 const questions = [
@@ -28,12 +29,12 @@ const questions = [
     {
         type: 'input',
         message: 'What are the contribution guidelines for your project?',
-        name: 'contribution',
+        name: 'contributing',
     },
     {
         type: 'input',
         message: 'What are the test instructions for your project?',
-        name: 'test',
+        name: 'tests',
     },
     {
         type: 'list',
@@ -49,13 +50,14 @@ const questions = [
 ];
 
 // TODO: Create a function to write README file
-function writeToFile({title, description, installation, usage, contribution, test, license, email}) {
+function writeToFile({title, description, installation, usage, contributing, tests, license, email}) {
+    // Generate the content for the README file using the provided answers
     return `# ${title}
 
-    ## Description
-    ${description}
+## Description
+${description}
 
-    ## Table of Contents
+## Table of Contents
 1. [Description](#description)
 2. [Installation](#installation)
 3. [Usage](#usage)
@@ -71,16 +73,16 @@ function writeToFile({title, description, installation, usage, contribution, tes
     ## Usage
     ${usage}
 
-    ## Contribution
-    ${contribution}
+    ## Contributing
+    ${contributing}
 
-    ## Test
-    ${test}
+    ## Tests
+    ${tests}
 
     ## License
-    ${renderLicenseBadge(license)}
-    ${renderLicenseSection(license)}
-    ${renderLicenseLink(license)}
+    ${renderLicenseBadge(license)} // Render the license badge
+    ${renderLicenseSection(license)} // Render the license section
+    ${renderLicenseLink(license)} // Render the license link
 
     ## Questions?
     ${email}`;
@@ -89,8 +91,11 @@ function writeToFile({title, description, installation, usage, contribution, tes
 
 // TODO: Create a function to initialize app
 function init() {
+    // Prompt the user with the questions array
     inquirer.prompt(questions).then((answers) => {
+        // Generate the content for the README file using the answers
         const readmeContent = writeToFile(answers);
+        // Write the content to a file named 'README.md'
         fs.writeFile('README.md', readmeContent, (err) =>
             err ? console.error(err) : console.log('README.md created!')
         );
